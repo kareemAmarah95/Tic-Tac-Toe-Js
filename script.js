@@ -1,7 +1,8 @@
 const gameBoard = document.querySelector("#gameboard");
 const playerInfo = document.querySelector("#info");
-const startAreas = ["", "", "", "", "", "", "", "", ""];
+let startAreas = ["", "", "", "", "", "", "", "", ""];
 let go = "circle";
+
 playerInfo.textContent = "Circle Starts";
 function createBoard() {
   startAreas.forEach((_el, i) => {
@@ -43,7 +44,8 @@ function checkForWin() {
 
   winningCombos.forEach((array) => {
     const circleWins = array.every((cell) =>
-    allSquares[cell].firstChild?.classList.contains("circle"));
+      allSquares[cell].firstChild?.classList.contains("circle")
+    );
     if (circleWins) {
       playerInfo.textContent = "Circle Wins";
       allSquares.forEach((square) =>
@@ -54,8 +56,9 @@ function checkForWin() {
   });
 
   winningCombos.forEach((array) => {
-    const crossWins = array.every((cell) => 
-    allSquares[cell].firstChild?.classList.contains("cross"));
+    const crossWins = array.every((cell) =>
+      allSquares[cell].firstChild?.classList.contains("cross")
+    );
     if (crossWins) {
       playerInfo.textContent = "Cross Wins";
       allSquares.forEach((square) =>
@@ -63,5 +66,25 @@ function checkForWin() {
       );
       return;
     }
+  });
+
+  const isDraw = Array.from(allSquares).every(
+    (square) =>
+      square.firstChild?.classList.contains("circle") ||
+      square.firstChild?.classList.contains("cross")
+  );
+  if (isDraw) {
+    playerInfo.textContent = "Game Is Draw";
+    allSquares.forEach((square) => square.replaceWith(square.cloneNode(true)));
+  }
+}
+
+function resetGame() {
+  const allSquares = document.querySelectorAll(".square");
+  allSquares.forEach((square) => {
+    square.innerText = "";
+    go = "circle";
+    playerInfo.textContent = `let ${go}'s go`;
+    square.addEventListener("click", addGo);
   });
 }
